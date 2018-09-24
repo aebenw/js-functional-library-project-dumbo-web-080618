@@ -98,21 +98,32 @@ fi = (function() {
       return newArr
     },
 
-    // flatten: function(array, shallow) {
-    //
-    //   let newArr = [];
-    //   for (i in array) {
-    //   if (typeof array[i] === 'number') {
-    //     newArr.push(array[i])
-    //   } else if (typeof array[i] === 'object') {
-    //     let smallArr = array[i];
-    //     for (a in smallArr) {
-    //
-    //     }
-    //   }
-    //   }
-    //   return newArr
-    // },
+    unpack: function(receiver, arr) {
+     for (let val of arr)
+       receiver.push(val)
+    },
+
+    flatten: function(array, shallow, newArr=[]) {
+
+      if (shallow) {
+        for (let val of array){
+          if(Array.isArray(val)){
+            this.unpack(newArr, val)
+          } else{
+            newArr.push(val)
+          }
+        }
+      } else {
+        for (i in array) {
+          if (typeof array[i] === 'number') {
+            newArr.push(array[i])
+          } else if (typeof array[i] === 'object') {
+            this.flatten(array[i], false, newArr)
+        }
+      }
+    }
+      return newArr
+    },
 
 
     uniq: function(array, isSorted = false, callback) {
